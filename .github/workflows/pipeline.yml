@@ -1,31 +1,57 @@
 name: Data Warehouse Pipeline
 
 on:
-  schedule:
-    - cron: "0 2 * * *"   # daily run
+  push:
+    branches: [ main ]
   workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"   # daily run (2 AM UTC)
 
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
 
+    # ✅ PostgreSQL service (temporary DB)
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: sales_warehouse
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
-      - name: Checkout repo
+      # 1️⃣ Repo download
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2️⃣ Python install
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
+      # 3️⃣ Dependencies install
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # 4️⃣ Wait for Postgres (IMPORTANT)
+      - name: Wait for PostgreSQL
+        run: sleep 10
+
+      # 5️⃣ Run pipeline
       - name: Run Pipeline
         env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_HOST: localhost
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: sales_warehouse
+          DB_PORT: 5432
         run: python pipeline.py
