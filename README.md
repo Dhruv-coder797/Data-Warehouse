@@ -1,14 +1,17 @@
-# 🏗️ End-to-End Data Warehouse Pipeline (PostgreSQL + Python)
+# 🏗️ Automated End-to-End Data Warehouse Pipeline
 
-## 📌 Project Overview
-This project demonstrates an end-to-end Data Engineering pipeline that builds a **Data Warehouse** from raw CSV data using Python and PostgreSQL.
+## 📌 Overview
+This project demonstrates a **production-style Data Engineering pipeline** that builds and maintains a Data Warehouse using Python and PostgreSQL.
 
-The pipeline automatically:
-- Extracts raw data
-- Loads into staging tables
-- Transforms data into a Star Schema
+The system automatically:
+- Initializes database schemas & tables
+- Loads raw CSV data into staging
+- Transforms data into Star Schema
+- Performs incremental loading
 - Updates analytics tables
-- Runs incrementally (loads only new records)
+- Runs automatically using Linux Cron
+
+No manual database setup is required.
 
 ---
 
@@ -18,12 +21,13 @@ The pipeline automatically:
 
 ## ⚙️ Tech Stack
 
-- Python 3
+- Python
 - PostgreSQL
 - Pandas
 - psycopg2
 - Linux (WSL Ubuntu)
 - Git & GitHub
+- Cron Scheduler
 
 ---
 
@@ -33,28 +37,28 @@ The pipeline automatically:
 
 ## 🔄 Pipeline Workflow
 
-1. Read CSV data using Pandas
+1. Auto-create schemas and tables (if missing)
 2. Detect last processed record
-3. Load only new records (Incremental Load)
-4. Insert data into staging tables
-5. Transform data into:
-   - Fact Table
-   - Dimension Tables
+3. Load only new data (Incremental Load)
+4. Populate dimension tables
+5. Update fact table
 6. Refresh analytics layer
+7. Write execution logs
 
 ---
 
-## ✅ Features
+## ✅ Key Features
 
-- Incremental data loading
-- Automated pipeline execution
-- Logging & error handling
-- Environment variable configuration (.env)
-- Modular ETL design
+- ✅ Automated database initialization
+- ✅ Incremental ETL processing
+- ✅ Production-safe path handling
+- ✅ Logging system
+- ✅ Cron-based automation
+- ✅ Clone & Run setup
 
 ---
 
-## 🚀 How to Run
+## 🚀 Setup Instructions
 
 ### 1️⃣ Clone repository
 
@@ -62,30 +66,43 @@ The pipeline automatically:
 
 ### 3️⃣ Install dependencies
 
-### 4️⃣ Setup environment variables
+### 4️⃣ Configure environment variables
 
 Create `.env` file:
 
 ### 5️⃣ Run pipeline
 
+### 5️⃣ Run pipeline
+
+Database and tables will be created automatically.
+
+---
+
+## ⏱️ Automation (Cron)
+
+Example cron job:
+
+Runs pipeline daily at 2 AM.
+
 ---
 
 ## 📊 Example Output
 
-- Clean warehouse tables
-- Monthly sales analytics
-- Automated incremental updates
+- Updated warehouse tables
+- Monthly revenue analytics
+- Execution logs inside `/logs`
 
 ---
 
 ## 🎯 Learning Outcomes
 
-This project demonstrates practical knowledge of:
+This project demonstrates:
 
-- Data Warehouse Modeling
-- ETL Pipeline Design
-- Incremental Processing
-- PostgreSQL Data Engineering
+- Data Warehouse Design
+- ETL Pipeline Engineering
+- Incremental Data Loading
+- Automation & Scheduling
+- Deployment across systems
 - Production-style project structure
 
 ---
