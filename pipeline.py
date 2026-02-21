@@ -1,7 +1,17 @@
 import subprocess
 from datetime import datetime
+import os
+import sys
+# project root path automatically detect
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-log_file = "logs/pipeline.log"
+# ensure logs folder exists
+os.makedirs(os.path.join(BASE_DIR, "logs"), exist_ok=True)
+subprocess.run(
+    [sys.executable, os.path.join(BASE_DIR, "scripts/init_db.py")],
+    check=True
+)
+log_file = os.path.join(BASE_DIR, "logs/pipeline.log")
 error_file = "logs/error.log"
 
 def log(message):
