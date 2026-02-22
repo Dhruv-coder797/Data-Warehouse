@@ -1,6 +1,6 @@
-import pandas as pd
+pd.read_csv()import pandas as pd
 import psycopg2
-
+pd.read_csv()
 conn = psycopg2.connect(
     dbname="sales_warehouse",
     user="postgres",
