@@ -1,113 +1,248 @@
-# 🏗️ Automated End-to-End Data Warehouse Pipeline
+# 🚀 Data Warehouse ETL Pipeline (Industry-Style Project)
 
-## 📌 Overview
-This project demonstrates a **production-style Data Engineering pipeline** that builds and maintains a Data Warehouse using Python and PostgreSQL.
+## 📌 Project Overview
 
-The system automatically:
-- Initializes database schemas & tables
-- Loads raw CSV data into staging
-- Transforms data into Star Schema
-- Performs incremental loading
-- Updates analytics tables
-- Runs automatically using Linux Cron
+This project is a **production-style Data Engineering pipeline** that builds and maintains a Data Warehouse using **Python, PostgreSQL, and automated ETL workflows**.
 
-No manual database setup is required.
+The system simulates how real companies (Amazon, Flipkart, Uber, etc.) continuously ingest transactional data, transform it, and generate analytics-ready datasets.
+
+Instead of static demo data, this project includes a **data generator** that creates new orders automatically — allowing the warehouse to behave like a real growing system.
 
 ---
 
-## 🧱 Architecture
+## 🏗️ Architecture
+
+```
+Data Generator
+      ↓
+orders.csv (Source System)
+      ↓
+Staging Layer (PostgreSQL)
+      ↓
+Warehouse Layer (Star Schema)
+      ↓
+Analytics Tables
+      ↓
+Business Insights
+```
 
 ---
 
 ## ⚙️ Tech Stack
 
-- Python
-- PostgreSQL
-- Pandas
-- psycopg2
-- Linux (WSL Ubuntu)
-- Git & GitHub
-- Cron Scheduler
+* Python 3
+* PostgreSQL
+* Pandas
+* psycopg2
+* Linux / Ubuntu
+* Git & GitHub
+* GitHub Actions (Automation)
 
 ---
 
 ## 📂 Project Structure
 
+```
+data_warehouse/
+│
+├── data/
+│   └── orders.csv              # Source data
+│
+├── scripts/
+│   ├── init_db.py              # Database & schema initialization
+│   ├── init_db.sql             # Warehouse schema
+│   ├── load_staging.py         # Incremental data ingestion
+│   └── run_transform.py        # Warehouse transformations
+│
+├── logs/
+│   └── pipeline.log            # Pipeline execution logs
+│
+├── pipeline.py                 # Main ETL Orchestrator
+├── generate_orders.py          # Data generator (NEW DATA SIMULATION)
+├── requirements.txt
+└── README.md
+```
+
 ---
 
 ## 🔄 Pipeline Workflow
 
-1. Auto-create schemas and tables (if missing)
-2. Detect last processed record
-3. Load only new data (Incremental Load)
-4. Populate dimension tables
-5. Update fact table
-6. Refresh analytics layer
-7. Write execution logs
+### Step 1 — Database Initialization
+
+Automatically creates:
+
+* staging schema
+* warehouse schema
+* analytics schema
+* fact & dimension tables
 
 ---
 
-## ✅ Key Features
+### Step 2 — Data Generation
 
-- ✅ Automated database initialization
-- ✅ Incremental ETL processing
-- ✅ Production-safe path handling
-- ✅ Logging system
-- ✅ Cron-based automation
-- ✅ Clone & Run setup
+`generate_orders.py` simulates new business transactions by adding new records to:
+
+```
+data/orders.csv
+```
+
+This mimics real production systems where data keeps arriving.
 
 ---
 
-## 🚀 Setup Instructions
+### Step 3 — Incremental Loading (ETL)
 
-### 1️⃣ Clone repository
+Pipeline loads **only new records** using:
 
-### 2️⃣ Create virtual environment
+```
+SELECT MAX(order_id)
+```
 
-### 3️⃣ Install dependencies
+This ensures:
 
-### 4️⃣ Configure environment variables
+* No duplicate loads
+* Idempotent pipeline
+* Production-safe ingestion
+
+---
+
+### Step 4 — Transformation
+
+Data moves from:
+
+```
+staging → warehouse → analytics
+```
+
+Star schema includes:
+
+* `sales_fact`
+* `date_dim`
+* `customer_dim`
+* `product_dim`
+
+---
+
+### Step 5 — Analytics Layer
+
+Example output:
+
+```
+analytics.monthly_sales
+```
+
+Provides business insights like revenue trends.
+
+---
+
+## ▶️ How To Run
+
+### 1️⃣ Setup Environment
+
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+---
+
+### 2️⃣ Configure Database
 
 Create `.env` file:
 
-### 5️⃣ Run pipeline
-
-### 5️⃣ Run pipeline
-
-Database and tables will be created automatically.
-
----
-
-## ⏱️ Automation (Cron)
-
-Example cron job:
-
-Runs pipeline daily at 2 AM.
+```
+DB_NAME=sales_warehouse
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=5432
+```
 
 ---
 
-## 📊 Example Output
+### 3️⃣ Run Pipeline
 
-- Updated warehouse tables
-- Monthly revenue analytics
-- Execution logs inside `/logs`
+```
+python pipeline.py
+```
+
+Expected output:
+
+```
+Database ready ✅
+Loading data into staging...
+Warehouse Updated Successfully
+```
 
 ---
 
-## 🎯 Learning Outcomes
+## 🤖 Automation
 
-This project demonstrates:
+Pipeline can run automatically using:
 
-- Data Warehouse Design
-- ETL Pipeline Engineering
-- Incremental Data Loading
-- Automation & Scheduling
-- Deployment across systems
-- Production-style project structure
+* GitHub Actions (cloud execution)
+* Cron Jobs (Linux scheduler)
+
+This simulates real Data Engineering production workflows.
+
+---
+
+## 📊 Example Insights
+
+Run inside PostgreSQL:
+
+```
+SELECT * FROM analytics.monthly_sales;
+```
+
+Output:
+
+* Monthly revenue
+* Aggregated business metrics
+* Analytics-ready datasets
+
+---
+
+## ⭐ Key Data Engineering Concepts Implemented
+
+* ETL Pipeline Design
+* Incremental Loading
+* Idempotent Processing
+* Staging Layer Architecture
+* Star Schema Modeling
+* Pipeline Orchestration
+* Logging & Monitoring
+* Automated Deployment
+
+---
+
+## 🎯 Learning Outcome
+
+This project demonstrates how a real Data Engineer:
+
+* Ingests growing datasets
+* Builds scalable warehouses
+* Automates pipelines
+* Produces analytics-ready data
 
 ---
 
 ## 👨‍💻 Author
 
-Dhruv Kesarwani  
-Aspiring Data Engineer 🚀
+**Dhruv Kesarwani**
+
+Aspiring Data Engineer building industry-level data systems.
+
+---
+
+## 🚀 Future Improvements
+
+* Apache Airflow orchestration
+* Streaming ingestion (Kafka)
+* Cloud deployment (AWS/GCP)
+* Dashboard integration (Power BI / Superset)
+
+---
+
+⭐ If you found this useful, consider giving the repository a star!
